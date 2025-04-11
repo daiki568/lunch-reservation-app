@@ -1,9 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/admin/dashboard", "destination": "/app/admin/dashboard" },
-    { "source": "/admin/menu", "destination": "/app/admin/menu" },
-    { "source": "/admin/reservations", "destination": "/app/admin/reservations" },
-    { "source": "/user/reservation", "destination": "/app/user/reservation" },
-    { "source": "/user/confirmation", "destination": "/app/user/confirmation" }
-  ]
-}
