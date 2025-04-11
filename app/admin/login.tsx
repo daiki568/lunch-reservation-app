@@ -80,9 +80,6 @@ export default function AdminLoginScreen() {
             style={styles.loginButton}
           />
           
-          <Text style={styles.hint}>
-            デフォルトのPINは「1234」です
-          </Text>
         </View>
       </View>
     </SafeAreaView>
