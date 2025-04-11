@@ -1,17 +1,4 @@
 {
-  "buildCommand": "expo export -p web",
-  "outputDirectory": "dist",
-  "devCommand": "expo",
-  "cleanUrls": true,
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/:path*",
-      "destination": "/"
-    }
-  ]
-}
-{
   "rewrites": [
     { "source": "/admin/dashboard", "destination": "/app/admin/dashboard" },
     { "source": "/admin/menu", "destination": "/app/admin/menu" },
