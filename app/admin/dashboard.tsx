@@ -22,23 +22,13 @@ export default function AdminDashboardScreen() {
   const todayMenu = menus.find(m => m.date === today);
   
   const handleLogout = () => {
-    Alert.alert(
-      'ログアウト',
-      '管理者モードからログアウトしますか？',
-      [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: 'ログアウト',
-          style: 'destructive',
-          onPress: () => {
-            logout();
-            router.replace('/');
-          },
-        },
-      ]
-    );
-  };
-  
+  const confirmed = window.confirm('管理者モードからログアウトしますか？');
+  if (confirmed) {
+    logout();
+    router.replace('/');
+  }
+};
+
   const navigateToMenu = () => {
     router.push('/admin/menu');
   };
