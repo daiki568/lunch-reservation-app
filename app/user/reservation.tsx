@@ -59,8 +59,8 @@ export default function ReservationScreen() {
     if (!roomNumber.trim()) {
       newErrors.roomNumber = '部屋番号を入力してください';
       isValid = false;
-    } else if (!/^
-{1,4}$/.test(roomNumber.trim())) {
+    } 
+    else if (!/^\d{1,4}$/.test(roomNumber.trim())) {
       newErrors.roomNumber = '有効な部屋番号を入力してください';
       isValid = false;
     }
