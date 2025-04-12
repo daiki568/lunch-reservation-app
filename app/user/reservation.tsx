@@ -20,7 +20,7 @@ const postReservationToSheets = async (reservation: {
 }) => {
   try {
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbxpgGo3faWwEaBK-Lg621jq-CPKsP_4rXaRI4TC-1erJP90YYTaRbf_JG-RxY7eS9TJ/exec',
+      'https://script.google.com/macros/s/AKfycbzkNLkbLshdXh4-ZECIm76AzTGlnZGUm6e3r0G3HTR30fKbGt3qZYHKsFb5BkFKn_uu/exec',
       {
         method: 'POST',
         headers: {
