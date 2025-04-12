@@ -1,3 +1,15 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import Header from '@/components/Header';
+import Input from '@/components/Input';
+import Button from '@/components/Button';
+import MenuDisplay from '@/components/MenuDisplay';
+import { useMenuStore } from '@/store/menu-store';
+import { useReservationStore } from '@/store/reservation-store';
+import Colors from '@/constants/colors';
+
 const postReservationToSheets = async (reservation: {
   id: string;
   name: string;
@@ -21,55 +33,45 @@ const postReservationToSheets = async (reservation: {
     console.error('Google Sheetsへの送信失敗:', error);
   }
 };
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import Header from '@/components/Header';
-import Input from '@/components/Input';
-import Button from '@/components/Button';
-import MenuDisplay from '@/components/MenuDisplay';
-import { useMenuStore } from '@/store/menu-store';
-import { useReservationStore } from '@/store/reservation-store';
-import Colors from '@/constants/colors';
 
 export default function ReservationScreen() {
   const router = useRouter();
   const { getDailyMenu } = useMenuStore();
   const { addReservation } = useReservationStore();
-  
+
   const [name, setName] = useState('');
   const [roomNumber, setRoomNumber] = useState('');
   const [errors, setErrors] = useState({ name: '', roomNumber: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const today = new Date().toISOString().split('T')[0];
   const todayMenu = getDailyMenu(today);
-  
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = { name: '', roomNumber: '' };
-    
+
     if (!name.trim()) {
       newErrors.name = 'お名前を入力してください';
       isValid = false;
     }
-    
+
     if (!roomNumber.trim()) {
       newErrors.roomNumber = '部屋番号を入力してください';
       isValid = false;
-    } else if (!/^\d{1,4}$/.test(roomNumber.trim())) {
+    } else if (!/^
+{1,4}$/.test(roomNumber.trim())) {
       newErrors.roomNumber = '有効な部屋番号を入力してください';
       isValid = false;
     }
-    
+
     setErrors(newErrors);
     return isValid;
   };
-  
+
   const handleSubmit = () => {
     if (!validateForm()) return;
-    
+
     if (!todayMenu) {
       Alert.alert(
         '予約できません',
@@ -77,36 +79,44 @@ export default function ReservationScreen() {
       );
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const reservationId = addReservation(name, roomNumber);
+      const reservation = {
+        id: reservationId,
+        name,
+        roomNumber,
+        date: today,
+        isPaid: false,
+        createdAt: new Date().toISOString(),
+      };
+
+      postReservationToSheets(reservation);
+
       router.push({
         pathname: '/user/confirmation',
-        params: { id: reservationId }
+        params: { id: reservationId },
       });
     } catch (error) {
-      Alert.alert(
-        'エラー',
-        '予約の処理中にエラーが発生しました。もう一度お試しください。'
-      );
+      Alert.alert('エラー', '予約の処理中にエラーが発生しました。もう一度お試しください。');
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <Header title="昼食予約" showBackButton />
-      
+
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>本日のメニュー</Text>
         <MenuDisplay menu={todayMenu} date={today} />
-        
+
         <View style={styles.formContainer}>
           <Text style={styles.sectionTitle}>予約情報</Text>
-          
+
           <Input
             label="お名前"
             value={name}
@@ -115,7 +125,7 @@ export default function ReservationScreen() {
             error={errors.name}
             style={styles.input}
           />
-          
+
           <Input
             label="部屋番号"
             value={roomNumber}
@@ -125,7 +135,7 @@ export default function ReservationScreen() {
             error={errors.roomNumber}
             style={styles.input}
           />
-          
+
           <Button
             title="予約する"
             onPress={handleSubmit}
@@ -133,7 +143,7 @@ export default function ReservationScreen() {
             disabled={!todayMenu}
             style={styles.submitButton}
           />
-          
+
           {!todayMenu && (
             <Text style={styles.noMenuWarning}>
               本日のメニューがまだ設定されていません。予約はできません。
