@@ -19,7 +19,7 @@ const postReservationToSheets = async (reservation: {
   createdAt: string;
 }) => {
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxXbJ7ZhLK3vfIADIFKrz-hWUgpGTiAcx7QM5CWvDPsMwyYYhhPgyPpswe7p16Y_fWM/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxpgGo3faWwEaBK-Lg621jq-CPKsP_4rXaRI4TC-1erJP90YYTaRbf_JG-RxY7eS9TJ/exec', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
