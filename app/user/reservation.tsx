@@ -19,13 +19,16 @@ const postReservationToSheets = async (reservation: {
   createdAt: string;
 }) => {
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxpgGo3faWwEaBK-Lg621jq-CPKsP_4rXaRI4TC-1erJP90YYTaRbf_JG-RxY7eS9TJ/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(reservation),
-    });
+    const response = await fetch(
+      'https://script.google.com/macros/s/AKfycbxpgGo3faWwEaBK-Lg621jq-CPKsP_4rXaRI4TC-1erJP90YYTaRbf_JG-RxY7eS9TJ/exec',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reservation),
+      }
+    );
 
     const result = await response.json();
     console.log('Google Sheetsへの保存結果:', result);
@@ -59,8 +62,7 @@ export default function ReservationScreen() {
     if (!roomNumber.trim()) {
       newErrors.roomNumber = '部屋番号を入力してください';
       isValid = false;
-    } 
-    else if (!/^\d{1,4}$/.test(roomNumber.trim())) {
+    } else if (!/^\d{1,4}$/.test(roomNumber.trim())) {
       newErrors.roomNumber = '有効な部屋番号を入力してください';
       isValid = false;
     }
@@ -69,7 +71,7 @@ export default function ReservationScreen() {
     return isValid;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
 
     if (!todayMenu) {
@@ -90,101 +92,4 @@ export default function ReservationScreen() {
         roomNumber,
         date: today,
         isPaid: false,
-        createdAt: new Date().toISOString(),
-      };
-
-      postReservationToSheets(reservation);
-
-      router.push({
-        pathname: '/user/confirmation',
-        params: { id: reservationId },
-      });
-    } catch (error) {
-      Alert.alert('エラー', '予約の処理中にエラーが発生しました。もう一度お試しください。');
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      <Header title="昼食予約" showBackButton />
-
-      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.sectionTitle}>本日のメニュー</Text>
-        <MenuDisplay menu={todayMenu} date={today} />
-
-        <View style={styles.formContainer}>
-          <Text style={styles.sectionTitle}>予約情報</Text>
-
-          <Input
-            label="お名前"
-            value={name}
-            onChangeText={setName}
-            placeholder="山田 太郎"
-            error={errors.name}
-            style={styles.input}
-          />
-
-          <Input
-            label="部屋番号"
-            value={roomNumber}
-            onChangeText={setRoomNumber}
-            placeholder="例: 101"
-            keyboardType="number-pad"
-            error={errors.roomNumber}
-            style={styles.input}
-          />
-
-          <Button
-            title="予約する"
-            onPress={handleSubmit}
-            loading={isSubmitting}
-            disabled={!todayMenu}
-            style={styles.submitButton}
-          />
-
-          {!todayMenu && (
-            <Text style={styles.noMenuWarning}>
-              本日のメニューがまだ設定されていません。予約はできません。
-            </Text>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  content: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: Colors.text,
-    marginBottom: 12,
-  },
-  formContainer: {
-    marginTop: 24,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  submitButton: {
-    marginTop: 16,
-  },
-  noMenuWarning: {
-    marginTop: 16,
-    color: Colors.error,
-    textAlign: 'center',
-    fontSize: 14,
-  },
-});
+        createdAt
