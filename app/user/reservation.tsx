@@ -1,3 +1,26 @@
+const postReservationToSheets = async (reservation: {
+  id: string;
+  name: string;
+  roomNumber: string;
+  date: string;
+  isPaid: boolean;
+  createdAt: string;
+}) => {
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxXbJ7ZhLK3vfIADIFKrz-hWUgpGTiAcx7QM5CWvDPsMwyYYhhPgyPpswe7p16Y_fWM/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reservation),
+    });
+
+    const result = await response.json();
+    console.log('Google Sheetsへの保存結果:', result);
+  } catch (error) {
+    console.error('Google Sheetsへの送信失敗:', error);
+  }
+};
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
